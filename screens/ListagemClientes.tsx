@@ -28,9 +28,24 @@ export default function ListaClientes() {
     navigation.navigate('EditarCliente', { cliente });
   };
 
-  const handleRemover = (clienteId: string) => {
+  const handleRemover = async (clienteId: string) => {
+  try {
+    const res = await fetch(`https://us-central1-automanage-2db06.cloudfunctions.net/api/clientes/${clienteId}`, {
+      method: 'DELETE',
+    });
+
+    if (res.ok) {
+      // Remove da lista localmente após remoção no servidor
+      setClientes((prevClientes) => prevClientes.filter((c) => c.id !== clienteId));
+    } else {
+      console.error('Erro ao remover cliente:', await res.text());const handleRemover = (clienteId: string) => {
     // código de remoção continua igual
   };
+    }
+  } catch (err) {
+    console.error('Erro de rede ao remover cliente:', err);
+  }
+};
 
   return (
     <View style={{ flex: 1 }}>
